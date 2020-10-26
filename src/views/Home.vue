@@ -100,7 +100,7 @@ export default defineComponent({
         );
 
         if (distance < circle.r + otherCircle.r) {
-          if (circle.r == otherCircle.r) {
+          if (circle.r < otherCircle.r) {
             circle.dy = circle.dy * -1;
             circle.dx = circle.dx * -1;
           }
