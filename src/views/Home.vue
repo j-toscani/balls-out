@@ -2,9 +2,9 @@
   <div class="home__container">
     <canvas width="800" height="600" ref="game_canvas" />
     <div class="home__buttons-container">
-      <button>small</button>
-      <button>medium</button>
-      <button>big</button>
+      <button @click="addCircle(10)">small</button>
+      <button @click="addCircle(25)">medium</button>
+      <button @click="addCircle(50)">big</button>
     </div>
   </div>
 </template>
@@ -51,22 +51,34 @@ export default defineComponent({
 
       window.requestAnimationFrame(this.draw);
     },
+    createCircle(r: number = 10) {
+      const randomx = Math.floor(Math.random() * 600) + 100;
+      const randomy = Math.floor(Math.random() * 400) + 100;
+
+      const randomdx = Math.random() * 2 - 1;
+      const randomdy = Math.random() * 2 - 1;
+
+      const circle = {
+        x: randomx,
+        y: randomy,
+        dx: randomdx,
+        dy: randomdy,
+        r: r,
+        color: "#000",
+      };
+
+      return circle;
+    },
+    addCircle(r: number) {
+      const circle: CanvasCircle = this.createCircle(r);
+      const circles: CanvasCircle[] = [...this.circles, circle];
+      this.circles = circles;
+    },
     createRandomCircles(n: number) {
       const circles = [];
 
       for (let index = 0; index < n; index++) {
-        const randomx = Math.floor(Math.random() * 600) + 100;
-        const randomy = Math.floor(Math.random() * 400) + 100;
-
-        const circle = {
-          x: randomx,
-          y: randomy,
-          dx: 1,
-          dy: 1,
-          r: 10,
-          color: "#000",
-        };
-
+        const circle = this.createCircle();
         circles.push(circle);
       }
 
@@ -78,6 +90,27 @@ export default defineComponent({
       ctx.arc(circle.x, circle.y, circle.r, 0, 2 * Math.PI);
       ctx.fill();
     },
+
+    checkCollision(circle: CanvasCircle, circles: CanvasCircle[]) {
+      circles.forEach((otherCircle: CanvasCircle) => {
+        const distancex = circle.x - otherCircle.x;
+        const distancey = circle.y - otherCircle.y;
+        const distance = Math.sqrt(
+          distancex * distancex + distancey * distancey
+        );
+
+        if (distance < circle.r + otherCircle.r) {
+          if (circle.r == otherCircle.r) {
+            circle.dy = circle.dy * -1;
+            circle.dx = circle.dx * -1;
+          }
+
+          return;
+        }
+      });
+      return circle;
+    },
+
     prepareNextFrame(circle: CanvasCircle) {
       const hitLeft = circle.x - circle.r < 0;
       const hitRight = circle.x + circle.r > 800;
@@ -97,6 +130,8 @@ export default defineComponent({
         circle.dy = -1;
       }
 
+      circle = this.checkCollision(circle, this.circles);
+
       circle.x += circle.dx;
       circle.y += circle.dy;
 
@@ -115,7 +150,7 @@ export default defineComponent({
     } catch (err) {
       console.log(err);
     }
-    this.circles = this.createRandomCircles(50);
+    this.circles = this.createRandomCircles(2);
     window.requestAnimationFrame(this.draw);
   },
   beforeDestroy() {},
