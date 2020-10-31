@@ -11,22 +11,14 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
-interface CanvasCircle {
-  x: number; // position x-achsis
-  y: number; // position y-achsis
-  dx: number; // direction x-achsis
-  dy: number; // direction y-achsis
-  r: number; // radius
-  color: string; // string representing a hex color
-}
+import Circle from "../objects/Cirlce";
 
 export default defineComponent({
   name: "Home",
   data(): {
     canvas: undefined | HTMLCanvasElement;
     ctx: undefined | CanvasRenderingContext2D;
-    circles: CanvasCircle[];
+    circles: Circle[];
   } {
     return {
       canvas: undefined,
@@ -41,58 +33,31 @@ export default defineComponent({
       }
       this.ctx.clearRect(0, 0, 800, 600);
 
-      this.circles.forEach((circle: CanvasCircle) => {
+      this.circles.forEach((circle: Circle) => {
         this.paintCircle(this.ctx as CanvasRenderingContext2D, circle);
       });
 
-      const circles = this.circles.map((circle: CanvasCircle) =>
+      const circles = this.circles.map((circle: Circle) =>
         this.prepareNextFrame(circle)
       );
 
       window.requestAnimationFrame(this.draw);
     },
-    createCircle(r: number = 10) {
-      const randomx = Math.floor(Math.random() * 600) + 100;
-      const randomy = Math.floor(Math.random() * 400) + 100;
-
-      const randomdx = Math.random() * 2 - 1;
-      const randomdy = Math.random() * 2 - 1;
-
-      const circle = {
-        x: randomx,
-        y: randomy,
-        dx: randomdx,
-        dy: randomdy,
-        r: r,
-        color: "#000",
-      };
-
-      return circle;
-    },
     addCircle(r: number) {
-      const circle: CanvasCircle = this.createCircle(r);
-      const circles: CanvasCircle[] = [...this.circles, circle];
+      const circle: Circle = new Circle(10, "#fff");
+      const circles: Circle[] = [...this.circles, circle];
       this.circles = circles;
     },
-    createRandomCircles(n: number) {
-      const circles = [];
 
-      for (let index = 0; index < n; index++) {
-        const circle = this.createCircle();
-        circles.push(circle);
-      }
-
-      return circles;
-    },
-    paintCircle(ctx: CanvasRenderingContext2D, circle: CanvasCircle) {
+    paintCircle(ctx: CanvasRenderingContext2D, circle: Circle) {
       ctx.fillStyle = circle.color;
       ctx.beginPath();
       ctx.arc(circle.x, circle.y, circle.r, 0, 2 * Math.PI);
       ctx.fill();
     },
 
-    checkCollision(circle: CanvasCircle, circles: CanvasCircle[]) {
-      circles.forEach((otherCircle: CanvasCircle) => {
+    checkCollision(circle: Circle, circles: Circle[]) {
+      circles.forEach((otherCircle: Circle) => {
         const distancex = circle.x - otherCircle.x;
         const distancey = circle.y - otherCircle.y;
         const distance = Math.sqrt(
@@ -101,8 +66,6 @@ export default defineComponent({
 
         if (distance < circle.r + otherCircle.r) {
           if (circle.r < otherCircle.r) {
-            circle.dy = circle.dy * -1;
-            circle.dx = circle.dx * -1;
           }
 
           return;
@@ -111,26 +74,20 @@ export default defineComponent({
       return circle;
     },
 
-    prepareNextFrame(circle: CanvasCircle) {
-      const hitLeft = circle.x - circle.r < 0;
-      const hitRight = circle.x + circle.r > 800;
-      const hitTop = circle.y - circle.r < 0;
-      const hitBottom = circle.y + circle.r > 600;
+    prepareNextFrame(circle: Circle) {
+      const hitLeft = !circle.hitWall && circle.x - circle.r < 0;
+      const hitRight = !circle.hitWall && circle.x + circle.r > 800;
+      const hitTop = !circle.hitWall && circle.y - circle.r < 0;
+      const hitBottom = !circle.hitWall && circle.y + circle.r > 600;
 
-      if (hitLeft) {
-        circle.dx = 1;
+      if (hitRight || hitLeft) {
+        console.log("hit x");
+        circle.reverseDx();
       }
-      if (hitRight) {
-        circle.dx = -1;
+      if (hitBottom || hitTop) {
+        console.log("hit y");
+        circle.reverseDy();
       }
-      if (hitTop) {
-        circle.dy = 1;
-      }
-      if (hitBottom) {
-        circle.dy = -1;
-      }
-
-      circle = this.checkCollision(circle, this.circles);
 
       circle.x += circle.dx;
       circle.y += circle.dy;
@@ -150,10 +107,13 @@ export default defineComponent({
     } catch (err) {
       console.log(err);
     }
-    this.circles = this.createRandomCircles(2);
+    const circle = new Circle(10, "#000", { angle: 25, speed: 2 });
+    // circle.setRandomPosition(800, 600);
+    this.circles = [circle];
+
     window.requestAnimationFrame(this.draw);
   },
-  beforeDestroy() {},
+  beforeUnmount() {},
 });
 </script>
 
