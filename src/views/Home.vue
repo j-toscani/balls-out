@@ -71,12 +71,12 @@ export default defineComponent({
           distancex * distancex + distancey * distancey
         );
         if (distance < circle.r + circle.r) {
-          circle.color = "#fff";
+          circle.hitABall(collisionCircle);
           const collisionIndex = this.circles.findIndex(
             (circle) => circle.x === collisionCircle.x
           );
           if (collisionIndex !== -1) {
-            this.circles[collisionIndex].color = "#fff";
+            this.circles[collisionIndex].hitABall(circle);
           }
         }
       }
@@ -124,7 +124,7 @@ export default defineComponent({
     const array = new Array(10);
 
     for (let index = 0; index < array.length; index++) {
-      const circle = new Circle(10, "#000", { speed: 3 });
+      const circle = new Circle(20, "#000", { speed: 2 });
       circle.setRandomPosition(800, 600);
       circle.setRandomAngle();
       circles.push(circle);

@@ -44,17 +44,27 @@ export default class Circle {
   hitAWall(_dx: number, _dy: number) {
     const collisionAngle = (Math.atan2(_dx, _dy) * 180) / Math.PI + 90;
     const angleDiff = collisionAngle - this.angle;
-    this.angle = collisionAngle + angleDiff;
+    this.angle = (collisionAngle + angleDiff) % 360;
 
     this.hitWall = true;
     setTimeout(() => (this.hitWall = false), 100);
   }
 
-  hitABall(_dx: number, _dy: number) {
-    const collisionAngle = (Math.atan2(_dx, _dy) * 180) / Math.PI + 90;
-    const angleDiff = collisionAngle - this.angle;
-    this.angle = collisionAngle + angleDiff;
+  hitABall(ball: Circle) {
+    let vCollision = { x: ball.x - this.x, y: ball.y - this.y };
+    let distance = Math.sqrt(
+      (ball.x - this.x) * (ball.x - this.x) +
+        (ball.y - this.y) * (ball.y - this.y)
+    );
 
+    let vCollisionNorm = {
+      x: vCollision.x / distance,
+      y: vCollision.y / distance,
+    };
+
+    this.angle = Math.atan2(vCollisionNorm.x, vCollisionNorm.y) * 180;
+
+    this.color = "#fff";
     this.hitBall = true;
     setTimeout(() => (this.hitBall = false), 100);
   }
