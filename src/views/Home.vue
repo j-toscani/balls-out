@@ -37,9 +37,10 @@ export default defineComponent({
         this.paintCircle(this.ctx as CanvasRenderingContext2D, circle);
       });
 
-      const circles = this.circles.map((circle: Circle) =>
-        this.prepareNextFrame(circle)
-      );
+      const circles = this.circles.map((circle: Circle, index) => {
+        this.checkCollision(circle, index);
+        return this.prepareNextFrame(circle);
+      });
 
       window.requestAnimationFrame(this.draw);
     },
@@ -56,22 +57,29 @@ export default defineComponent({
       ctx.fill();
     },
 
-    checkCollision(circle: Circle, circles: Circle[]) {
-      circles.forEach((otherCircle: Circle) => {
-        const distancex = circle.x - otherCircle.x;
-        const distancey = circle.y - otherCircle.y;
+    checkCollision(circle: Circle, index: number) {
+      // get relevant circles
+      // remove circle to check and circles that were allready checked
+      const circles = this.circles.slice(0).splice(0, index);
+
+      // check collision for circle with other relevant circles
+      for (let checkIndex = 0; checkIndex < circles.length; checkIndex++) {
+        const collisionCircle = circles[checkIndex];
+        const distancex = circle.x - collisionCircle.x;
+        const distancey = circle.y - collisionCircle.y;
         const distance = Math.sqrt(
           distancex * distancex + distancey * distancey
         );
-
-        if (distance < circle.r + otherCircle.r) {
-          if (circle.r < otherCircle.r) {
+        if (distance < circle.r + circle.r) {
+          circle.color = "#fff";
+          const collisionIndex = this.circles.findIndex(
+            (circle) => circle.x === collisionCircle.x
+          );
+          if (collisionIndex !== -1) {
+            this.circles[collisionIndex].color = "#fff";
           }
-
-          return;
         }
-      });
-      return circle;
+      }
     },
 
     prepareNextFrame(circle: Circle) {
@@ -111,10 +119,18 @@ export default defineComponent({
     } catch (err) {
       console.log(err);
     }
-    const circle = new Circle(10, "#000", { angle: 25, speed: 2 });
-    // circle.setRandomPosition(800, 600);
-    this.circles = [circle];
 
+    let circles = [];
+    const array = new Array(10);
+
+    for (let index = 0; index < array.length; index++) {
+      const circle = new Circle(10, "#000", { speed: 3 });
+      circle.setRandomPosition(800, 600);
+      circle.setRandomAngle();
+      circles.push(circle);
+    }
+
+    this.circles = circles;
     window.requestAnimationFrame(this.draw);
   },
   beforeUnmount() {},
