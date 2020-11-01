@@ -80,13 +80,17 @@ export default defineComponent({
       const hitTop = !circle.hitWall && circle.y - circle.r < 0;
       const hitBottom = !circle.hitWall && circle.y + circle.r > 600;
 
-      if (hitRight || hitLeft) {
-        console.log("hit x");
-        circle.reverseDx();
+      if (hitRight) {
+        circle.hitAWall(0, 1);
       }
-      if (hitBottom || hitTop) {
-        console.log("hit y");
-        circle.reverseDy();
+      if (hitBottom) {
+        circle.hitAWall(-1, 0);
+      }
+      if (hitLeft) {
+        circle.hitAWall(0, -1);
+      }
+      if (hitTop) {
+        circle.hitAWall(1, 0);
       }
 
       circle.x += circle.dx;

@@ -1,6 +1,6 @@
 export default class Circle {
-    dx: number;
-    dy: number;
+    angle: number;
+    speed: number;
     x: number; // position x-achsis
     y: number; // position y-achsis
     r: number; // radius
@@ -10,12 +10,19 @@ export default class Circle {
     constructor( r:number, color:string, attrs?:{ x?:number, y?:number, speed?:number, angle?: number}) {
         this.x = attrs?.x || r; // position x-achsis
         this.y = attrs?.y || r; // position y-achsis
-        this.dx = Math.cos((attrs?.angle || 45) * Math.PI/180) * (attrs?.speed || 1);
-        this.dy = Math.sin((attrs?.angle || 45) * Math.PI/180) * (attrs?.speed || 1);
+        this.angle = attrs?.angle || 45;
+        this.speed = attrs?.speed || 1;
         this.r = r; // radius
         this.color = color || '#fff'; // string representing a hex color
         this.hitWall = false;
         this.hitBall = false;
+    }
+
+    get dy() {
+        return Math.sin(this.angle * Math.PI/180) * (this.speed)
+    }
+    get dx() {
+        return Math.cos(this.angle * Math.PI/180) * (this.speed)
     }
 
     setRandomPosition(width:number, height:number) {
@@ -26,16 +33,12 @@ export default class Circle {
         this.y = y;
     }
 
-    reverseDy() {
-        this.hitWall = true;
-        this.dy = -this.dy;
+    hitAWall(_dx:number, _dy:number) {
+        const collisionAngle = (Math.atan2(_dx, _dy) * 180 / Math.PI) + 90;
+        const angleDiff = collisionAngle - this.angle;
+        this.angle = collisionAngle + angleDiff;
 
-        setTimeout(() => this.hitWall = false, 100)
-    }
-    reverseDx() {
         this.hitWall = true;
-        this.dx = -this.dx;
-
         setTimeout(() => this.hitWall = false, 100)
     }
 
