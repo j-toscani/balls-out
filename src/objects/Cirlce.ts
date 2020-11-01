@@ -61,6 +61,7 @@ export default class Circle {
   }
 
   hitABall(ball: Circle, doNotCalcChange?: boolean) {
+    // check https://spicyyoghurt.com/tutorials/html5-javascript-game-development/collision-detection-physics
     if (!doNotCalcChange) {
       let vCollision = { x: ball.x - this.x, y: ball.y - this.y };
       let distance = Math.sqrt(
