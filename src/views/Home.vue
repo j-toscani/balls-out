@@ -16,11 +16,13 @@ import Circle from "../objects/Cirlce";
 export default defineComponent({
   name: "Home",
   data(): {
+    oldTime: number;
     canvas: undefined | HTMLCanvasElement;
     ctx: undefined | CanvasRenderingContext2D;
     circles: Circle[];
   } {
     return {
+      oldTime: Date.now(),
       canvas: undefined,
       ctx: undefined,
       circles: [],
@@ -31,16 +33,24 @@ export default defineComponent({
       if (!this.ctx) {
         return;
       }
+      const newTime = Date.now();
+      const oldTime = this.oldTime;
+
+      const timePassed = (newTime - oldTime) / 1000;
+
       this.ctx.clearRect(0, 0, 800, 600);
+
+      const circles = this.circles.map((circle: Circle, index) => {
+        this.checkCollision(circle, index);
+        circle.update(timePassed);
+        return circle;
+      });
 
       this.circles.forEach((circle: Circle) => {
         this.paintCircle(this.ctx as CanvasRenderingContext2D, circle);
       });
 
-      const circles = this.circles.map((circle: Circle, index) => {
-        this.checkCollision(circle, index);
-        return this.prepareNextFrame(circle);
-      });
+      this.oldTime = newTime;
 
       window.requestAnimationFrame(this.draw);
     },
@@ -58,6 +68,23 @@ export default defineComponent({
     },
 
     checkCollision(circle: Circle, index: number) {
+      const hitLeft = !circle.hitWall && circle.x - circle.r < 0;
+      const hitRight = !circle.hitWall && circle.x + circle.r > 800;
+      const hitTop = !circle.hitWall && circle.y - circle.r < 0;
+      const hitBottom = !circle.hitWall && circle.y + circle.r > 600;
+
+      if (hitRight) {
+        circle.hitAWall("right");
+      }
+      if (hitBottom) {
+        circle.hitAWall("bottom");
+      }
+      if (hitLeft) {
+        circle.hitAWall("left");
+      }
+      if (hitTop) {
+        circle.hitAWall("top");
+      }
       // get relevant circles
       // remove circle to check and circles that were allready checked
       const circles = this.circles.slice(0).splice(0, index);
@@ -71,40 +98,15 @@ export default defineComponent({
           distancex * distancex + distancey * distancey
         );
         if (distance < circle.r + circle.r) {
-          circle.hitABall(collisionCircle);
+          circle.hitABall(collisionCircle, true);
           const collisionIndex = this.circles.findIndex(
             (circle) => circle.x === collisionCircle.x
           );
           if (collisionIndex !== -1) {
-            this.circles[collisionIndex].hitABall(circle);
+            this.circles[collisionIndex].hitABall(circle, false);
           }
         }
       }
-    },
-
-    prepareNextFrame(circle: Circle) {
-      const hitLeft = !circle.hitWall && circle.x - circle.r < 0;
-      const hitRight = !circle.hitWall && circle.x + circle.r > 800;
-      const hitTop = !circle.hitWall && circle.y - circle.r < 0;
-      const hitBottom = !circle.hitWall && circle.y + circle.r > 600;
-
-      if (hitRight) {
-        circle.hitAWall(0, 1);
-      }
-      if (hitBottom) {
-        circle.hitAWall(-1, 0);
-      }
-      if (hitLeft) {
-        circle.hitAWall(0, -1);
-      }
-      if (hitTop) {
-        circle.hitAWall(1, 0);
-      }
-
-      circle.x += circle.dx;
-      circle.y += circle.dy;
-
-      return circle;
     },
   },
 
@@ -124,13 +126,14 @@ export default defineComponent({
     const array = new Array(10);
 
     for (let index = 0; index < array.length; index++) {
-      const circle = new Circle(20, "#000", { speed: 2 });
+      const circle = new Circle(20, "#000", { speed: 100 });
       circle.setRandomPosition(800, 600);
       circle.setRandomAngle();
       circles.push(circle);
     }
 
     this.circles = circles;
+    console.log(this.circles);
     window.requestAnimationFrame(this.draw);
   },
   beforeUnmount() {},
