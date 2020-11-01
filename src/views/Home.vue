@@ -33,12 +33,15 @@ export default defineComponent({
       if (!this.ctx) {
         return;
       }
+      this.ctx.clearRect(0, 0, 800, 600);
+      this.circles.forEach((circle: Circle) => {
+        this.paintCircle(this.ctx as CanvasRenderingContext2D, circle);
+      });
       const newTime = Date.now();
       const oldTime = this.oldTime;
 
       const timePassed = (newTime - oldTime) / 1000;
 
-      this.ctx.clearRect(0, 0, 800, 600);
 
       const circles = this.circles.map((circle: Circle, index) => {
         this.checkCollision(circle, index);
@@ -46,9 +49,6 @@ export default defineComponent({
         return circle;
       });
 
-      this.circles.forEach((circle: Circle) => {
-        this.paintCircle(this.ctx as CanvasRenderingContext2D, circle);
-      });
 
       this.oldTime = newTime;
 
