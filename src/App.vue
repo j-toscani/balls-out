@@ -31,19 +31,16 @@ body {
 /* GRID SYSTEM */
 .flex-grid__container-row {
   --flex-grid-columns: 12;
-
-  padding: 4%;
+  padding: 2%;
   display: flex;
   flex-flow: row wrap;
 }
 
 [class*="flex-grid__item"] {
   --flex-item-initialbasis: calc(
-    var(--flex-item-width) / var(--flex-grid-columns) * 100%
+    var(--flex-item-width) / var(--flex-grid-columns) * 99.999%
   );
-  --flex-item-gap: calc(
-    (var(--flex-grid-columns) - var(--flex-item-width)) * 0.5%
-  );
+  --flex-item-gap: 1rem;
   margin: 0 calc(var(--flex-item-gap) / 2);
   flex: 0 0 calc(var(--flex-item-initialbasis) - var(--flex-item-gap));
 }
