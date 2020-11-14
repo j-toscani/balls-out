@@ -21,7 +21,7 @@ body {
   height: 100%;
   width: 100%;
   margin: 0;
-  background: #888;
+  background: rgba(var(--primary-200));
 }
 
 .content__container {
