@@ -3,7 +3,7 @@ const _history = require("connect-history-api-fallback");
 const app = express();
 
 // Middleware for serving '/dist' directory
-const staticFileMiddleware = express.static("/dist/client");
+const staticFileMiddleware = express.static(__dirname);
 
 app.post("/api/user", (req, res) => {
   res.send("User created");
@@ -27,10 +27,10 @@ app.use(staticFileMiddleware);
 // Support history api
 app.use(
   _history({
-    index: "/dist/client/index.html",
+    index: "/index.html",
   })
 );
 
-app.listen(3000, function() {
+app.listen(3000, () => {
   console.log("Example app listening on port 3000!");
 });
