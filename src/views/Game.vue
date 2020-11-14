@@ -42,13 +42,11 @@ export default defineComponent({
 
       const timePassed = (newTime - oldTime) / 1000;
 
-
       const circles = this.circles.map((circle: Circle, index) => {
         this.checkCollision(circle, index);
         circle.update(timePassed);
         return circle;
       });
-
 
       this.oldTime = newTime;
 
