@@ -7,25 +7,69 @@
       autocomplete="off"
       @submit.prevent="handleFormSubmit"
     >
-      <transition>
-        <div v-if="mode === 'login'">
-          <one-line-input type="text" v-model="username" />
-          <one-line-input type="password" v-model="passwordLogin" />
+      <transition name="fade" mode="out-in">
+        <div v-if="mode === 'Login'">
+          <h2 class="login-register__headline">
+            {{ mode }}
+          </h2>
+          <one-line-input
+            type="text"
+            v-model="username"
+            data-name="username"
+            dsp-name="Username"
+          />
+          <one-line-input
+            type="password"
+            data-name="password"
+            v-model="passwordLogin"
+            dsp-name="Password"
+          />
+          <button
+            type="button"
+            class="login-register__toggle-button"
+            @click="enterRegister"
+          >
+            Click here to register now.
+          </button>
         </div>
         <div v-else>
-          <one-line-input type="text" v-model="username" />
-          <one-line-input type="email" v-model="email" />
-          <one-line-input type="password" v-model="passwordRegister" />
-          <one-line-input type="password" v-model="passwordRegisterConfirm" />
+          <h2>
+            {{ mode }}
+          </h2>
+          <one-line-input
+            type="text"
+            v-model="username"
+            dsp-name="Username"
+            data-name="username"
+          />
+          <one-line-input
+            type="email"
+            v-model="email"
+            dsp-name="E-Mail"
+            data-name="mail"
+          />
+          <one-line-input
+            type="password"
+            v-model="passwordRegister"
+            dsp-name="Password"
+            data-name="passwordRegister"
+          />
+          <one-line-input
+            type="password"
+            :pattern="passwordRegister"
+            v-model="passwordRegisterConfirm"
+            dsp-name="Confirm"
+            data-name="passwordRegisterConfirm"
+          />
+          <button
+            type="button"
+            class="login-register__toggle-button"
+            @click="enterLogin"
+          >
+            Click here to switch to Login.
+          </button>
         </div>
       </transition>
-
-      <button type="button" v-if="mode === 'register'" @click="enterLogin">
-        Click here to switch to Login.
-      </button>
-      <button type="button" v-if="mode === 'login'" @click="enterRegister">
-        Click here to register now.
-      </button>
 
       <button form="login-and-register-form" type="submit">Submit</button>
     </form>
@@ -42,7 +86,7 @@ export default defineComponent({
     OneLineInput,
   },
   data(): {
-    mode: "login" | "register";
+    mode: "Login" | "Register";
     username: string;
     email: string;
     passwordLogin: string;
@@ -50,7 +94,7 @@ export default defineComponent({
     passwordRegisterConfirm: string;
   } {
     return {
-      mode: "login",
+      mode: "Login",
       username: "",
       email: "",
       passwordLogin: "",
@@ -60,7 +104,7 @@ export default defineComponent({
   },
   methods: {
     handleFormSubmit() {
-      if (this.mode === "login") {
+      if (this.mode === "Login") {
         this.handleLogin();
       } else {
         this.handleRegister();
@@ -72,6 +116,7 @@ export default defineComponent({
         password: this.passwordLogin,
       };
       console.log(JSON.stringify(data));
+      this.$router.push("/Rooms");
     },
     handleRegister() {
       const data = {
@@ -80,12 +125,13 @@ export default defineComponent({
         password: this.passwordRegisterConfirm,
       };
       console.log(JSON.stringify(data));
+      this.$router.push("/Rooms");
     },
     enterLogin() {
-      this.mode = "login";
+      this.mode = "Login";
     },
     enterRegister() {
-      this.mode = "register";
+      this.mode = "Register";
     },
   },
 });
@@ -98,5 +144,40 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.login-register__headline {
+  margin-top: unset;
+}
+
+form {
+  min-width: 300px;
+  padding: 1rem;
+  border-radius: 10px;
+  color: rgba(var(--primary-200));
+  background: rgba(var(--primary-400));
+
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+button[type="submit"] {
+  background: rgba(var(--primary-200));
+  color: rgba(var(--neutral-100));
+
+  width: fit-content;
+  margin: 0.5rem auto;
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+}
+
+button[type="button"] {
+  color: rgba(var(--primary-200));
+  padding-left: 0;
+  padding-right: 0;
+  margin: 1rem 0;
+
+  background: transparent;
+  border: none;
 }
 </style>
