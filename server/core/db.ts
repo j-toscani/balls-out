@@ -1,4 +1,6 @@
-import mongoose from "mongoose";
+// Default export does not work. Has to be written this way
+// https://stackoverflow.com/questions/57635797/es6-module-mongoose-has-no-default-export
+import * as mongoose from "mongoose";
 
 mongoose.set("returnOriginal", false);
 

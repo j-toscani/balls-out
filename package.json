@@ -5,9 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:frontend": "vue-cli-service build",
-    "build:server": "tsc ./server/server.ts --outDir ./dist",
+    "build:server": "tsc server/*.ts --outDir ./dist/ && tsc server/**/*ts --outdir ./dist/",
     "build": "npm run build:frontend && npm run build:server",
-    "start": "node ./dist/server.js"
+    "start": "node ./dist"
   },
   "dependencies": {
     "@types/express": "^4.17.8",

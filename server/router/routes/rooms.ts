@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
   res.send("This creates a room");
 });
 
-router.put("/", (req, res) => {
+router.put("/:id", (req, res) => {
   res.send("This changes rooms settings");
 });
 
