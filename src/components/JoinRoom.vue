@@ -1,5 +1,11 @@
 <template>
-  <button class="room__container" @click="enterRoom">
+  <button
+    class="room__container"
+    :class="{
+      full: isFull,
+    }"
+    @click="enterRoom"
+  >
     <span class="room__name">
       {{ room.name }}
     </span>
@@ -28,6 +34,11 @@ export default defineComponent({
       },
     },
   },
+  computed: {
+    isFull(): boolean {
+      return this.room.users.length === 2;
+    },
+  },
   methods: {
     enterRoom() {
       console.log("Room Entered");
@@ -43,9 +54,9 @@ export default defineComponent({
   flex-direction: row nowrap;
 
   position: relative;
-  background: rgba(var(--primary-400));
   padding: 0.5rem 0.75rem;
   border-radius: 5px;
+  background: rgba(var(--primary-400));
 
   width: 100%;
   height: 100%;
@@ -53,6 +64,11 @@ export default defineComponent({
   color: rgba(var(--text-inverted));
 
   transition: box-shadow var(--timing-3) ease-out;
+}
+
+.room__container.full {
+  background: rgba(var(--primary-200));
+  border: 1px solid rgba(var(--primary-400));
 }
 
 .room__container:hover {
@@ -64,6 +80,10 @@ export default defineComponent({
   font-size: 0.8rem;
   padding: 0.25rem;
   border-radius: 5px;
-  background: rgba(var(--primary-300));
+  background: rgba(var(--primary-200));
+}
+
+.room__container.full > .room__indicator {
+  background: rgba(var(--primary-200));
 }
 </style>

@@ -13,9 +13,10 @@
         <create-room @clicked="toggleOverlay" />
       </li>
     </ul>
-    <ul class="flex-grid__container-row rooms__list">
-      <li class="flex-grid__item rooms__list-item"><join-room /></li>
-    </ul>
+    <transition name="fade">
+      <room-list v-if="!inRoom" />
+      <room v-else />
+    </transition>
     <transition name="fade">
       <create-room-overlay v-show="overlayOpen" @clicked="toggleOverlay" />
     </transition>
@@ -25,20 +26,23 @@
 <script lang="ts">
 import Vue, { defineComponent } from "vue";
 
-import JoinRoom from "@/components/JoinRoom.vue";
+import RoomList from "@/components/RoomList.vue";
+import Room from "@/components/Room.vue";
 import CreateRoomOverlay from "@/components/CreateRoomOverlay.vue";
-import CreateRoomButton from "@/components/CreateRoom.vue";
+import CreateRoom from "@/components/CreateRoom.vue";
 
 export default defineComponent({
   name: "Rooms",
   components: {
-    JoinRoom,
-    CreateRoomButton,
+    CreateRoom,
     CreateRoomOverlay,
+    RoomList,
+    Room,
   },
   data() {
     return {
       overlayOpen: false,
+      inRoom: true,
     };
   },
   methods: {
@@ -49,25 +53,15 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-main {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.flex-grid__item {
-  --flex-item-width: 3;
-}
-
-.rooms__top {
-  margin: 0 0.5rem;
-  color: rgba(var(--text-inverted));
-}
-
+<style>
 .rooms__list {
   width: 100%;
   padding: 0;
   list-style-type: none;
+}
+
+.flex-grid__item {
+  --flex-item-width: 3;
 }
 
 .rooms__list-item {
@@ -89,5 +83,17 @@ main {
 
 .flex-grid__item-12 {
   --flex-item-width: 12;
+}
+</style>
+
+<style scoped>
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.rooms__top {
+  margin: 0 0.5rem;
+  color: rgba(var(--text-inverted));
 }
 </style>
