@@ -51,6 +51,7 @@ export default defineComponent({
 .room__container-ready {
   margin: auto;
   width: 50%;
+  min-height: 400px;
   min-width: 300px;
   display: flex;
   flex-flow: column;
