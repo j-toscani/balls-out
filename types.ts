@@ -1,11 +1,13 @@
-export interface User {
-  id: number;
-  nickname: string;
+export interface UserBody {
+  username: string;
   email: string;
+  password: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Room {
   id: number;
   name: string;
-  users: User[];
+  users: UserBody[];
 }

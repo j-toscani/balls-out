@@ -4,8 +4,8 @@ export const DOCUMENT_NAME = "User";
 export const COLLECTION_NAME = "Users";
 
 export default interface User extends Document {
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   username: string;
   email: string;
   password: string;

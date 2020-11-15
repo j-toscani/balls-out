@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "server:watch": "cd server/ && tsc --watch",
-    "server:dev": "nodemon ./dist/index.js",
+    "server:dev": "nodemon ./dist/server/index.js",
     "build:frontend": "vue-cli-service build",
     "build:server": "tsc server/*.ts --outDir ./dist/ && tsc server/**/*ts --outdir ./dist/",
     "build": "npm run build:frontend && npm run build:server",
