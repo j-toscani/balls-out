@@ -54,9 +54,16 @@ small {
   font-weight: 400;
 }
 
+a {
+  text-decoration: none;
+}
+
 button {
   border: none;
   border-radius: 5px;
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+
   cursor: pointer;
   transition: box-shadow var(--timing-2) ease-out;
 }
@@ -86,6 +93,16 @@ button:not(.login-register__toggle-button):active {
   );
   margin: 0 calc(var(--flex-item-gap) / 2);
   flex: 0 0 calc(var(--flex-item-initialbasis) - var(--flex-item-gap));
+}
+
+.z-10 {
+  z-index: 10;
+}
+.z-20 {
+  z-index: 20;
+}
+.z-30 {
+  z-index: 30;
 }
 
 :root {
