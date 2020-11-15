@@ -1,5 +1,5 @@
-import startDB from "./core/db";
-import app from "./core/app";
+import startDB from "./db/db";
+import app from "./app";
 
 const port = process.env.PORT || 5000;
 const dbURL = process.env.DB_URL || "mongodb://localhost:27017";

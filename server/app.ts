@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-import router from "../router/router";
+import router from "./router/router";
 
 const express = require("express");
 const _history = require("connect-history-api-fallback");
