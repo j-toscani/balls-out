@@ -41,6 +41,7 @@ export default defineComponent({
   },
   methods: {
     enterRoom() {
+      this.$emit("entered-room");
       console.log("Room Entered");
     },
   },

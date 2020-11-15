@@ -17,7 +17,7 @@
       </li>
     </ul>
     <transition name="fade" mode="out-in">
-      <room-list v-if="inRoom" />
+      <room-list v-if="!inRoom" @entered-room="inRoom = true" />
       <room v-else />
     </transition>
     <transition name="fade">
