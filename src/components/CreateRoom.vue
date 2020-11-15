@@ -13,7 +13,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "CreateRoomButton",
+  name: "CreateRoom",
   methods: {
     emitClicked() {
       this.$emit("clicked");

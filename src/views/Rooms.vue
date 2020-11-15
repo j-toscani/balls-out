@@ -8,24 +8,53 @@
         sequi. Eos dolorum laborum assumenda dolorem. Qui, quos tempore.
       </p>
     </div>
-    <ul class="flex-grid__container-row rooms__list">
-      <li class="flex-grid__item rooms__list-item"></li>
-      <li class="flex-grid__item rooms__list-item"></li>
-      <li class="flex-grid__item rooms__list-item"></li>
-      <li class="flex-grid__item rooms__list-item"></li>
+    <ul class="flex-grid__container-row rooms__list" style="margin-bottom: 0">
+      <li class="flex-grid__item rooms__list-item">
+        <create-room @clicked="toggleOverlay" />
+      </li>
     </ul>
+    <ul class="flex-grid__container-row rooms__list">
+      <li class="flex-grid__item rooms__list-item"><join-room /></li>
+    </ul>
+    <transition name="fade">
+      <create-room-overlay v-show="overlayOpen" @clicked="toggleOverlay" />
+    </transition>
   </main>
 </template>
 
 <script lang="ts">
 import Vue, { defineComponent } from "vue";
 
+import JoinRoom from "@/components/JoinRoom.vue";
+import CreateRoomOverlay from "@/components/CreateRoomOverlay.vue";
+import CreateRoomButton from "@/components/CreateRoom.vue";
+
 export default defineComponent({
   name: "Rooms",
+  components: {
+    JoinRoom,
+    CreateRoomButton,
+    CreateRoomOverlay,
+  },
+  data() {
+    return {
+      overlayOpen: false,
+    };
+  },
+  methods: {
+    toggleOverlay() {
+      this.overlayOpen = !this.overlayOpen;
+    },
+  },
 });
 </script>
 
 <style scoped>
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .flex-grid__item {
   --flex-item-width: 3;
 }
@@ -44,8 +73,6 @@ export default defineComponent({
 .rooms__list-item {
   --flex-item-width: 12;
   margin-bottom: 1rem;
-  height: 40px;
-  background: yellow;
 }
 
 @media (min-width: 768px) {
@@ -57,12 +84,6 @@ export default defineComponent({
 @media (min-width: 1200px) {
   .rooms__list-item {
     --flex-item-width: 3;
-  }
-}
-
-@media (min-width: 1920px) {
-  .rooms__list-item {
-    --flex-item-width: 2;
   }
 }
 
