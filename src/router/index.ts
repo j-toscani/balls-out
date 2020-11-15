@@ -15,12 +15,12 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: "/Rooms",
+    path: "/rooms",
     name: "Rooms",
     component: Rooms,
   },
   {
-    path: "/Rooms/:id",
+    path: "/rooms/:id",
     name: "Game",
     component: Game,
   },
