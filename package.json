@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "server:watch": "cd server/ && tsc --watch",
+    "server:dev": "nodemon ./dist/index.js",
     "build:frontend": "vue-cli-service build",
     "build:server": "tsc server/*.ts --outDir ./dist/ && tsc server/**/*ts --outdir ./dist/",
     "build": "npm run build:frontend && npm run build:server",
@@ -30,6 +32,7 @@
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
+    "nodemon": "^2.0.6",
     "typescript": "~3.9.3"
   }
 }
