@@ -8,13 +8,16 @@
         sequi. Eos dolorum laborum assumenda dolorem. Qui, quos tempore.
       </p>
     </div>
-    <ul class="flex-grid__container-row rooms__list" style="margin-bottom: 0">
+    <ul
+      class="flex-grid__container-row rooms__list"
+      :style="`margin-bottom: 0; opacity: ${inRoom ? 1 : 0}`"
+    >
       <li class="flex-grid__item rooms__list-item">
         <create-room @clicked="toggleOverlay" />
       </li>
     </ul>
-    <transition name="fade">
-      <room-list v-if="!inRoom" />
+    <transition name="fade" mode="out-in">
+      <room-list v-if="inRoom" />
       <room v-else />
     </transition>
     <transition name="fade">
