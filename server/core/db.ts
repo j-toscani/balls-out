@@ -3,12 +3,13 @@ import mongoose from "mongoose";
 mongoose.set("returnOriginal", false);
 
 const startDB = (url: string) => {
-  const connected = mongoose.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-  return connected;
+  mongoose
+    .connect(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => console.log("DB connected"))
+    .catch(() => console.log("DB did not connect"));
 };
 
 export default startDB;
