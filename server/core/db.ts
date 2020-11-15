@@ -1,22 +1,14 @@
-const { MongoClient } = require("mongodb");
-let db = null;
+import mongoose from "mongoose";
 
-export async function initDatabase(url, dbName) {
-  const client = new MongoClient(url, {
+mongoose.set("returnOriginal", false);
+
+const startDB = (url: string) => {
+  const connected = mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  try {
-    await client.connect();
-    db = client.db(dbName);
-  } catch (error) {
-    console.log("Database can not connect. Check the connection URL.");
-  }
-}
 
-export async function getCollection(collectionName) {
-  if (!db) {
-    throw new Error("You have to initialize the database first");
-  }
-  return db.collection(collectionName);
-}
+  return connected;
+};
+
+export default startDB;
