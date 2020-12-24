@@ -27,7 +27,7 @@ const schema = new Schema({
     {
       type: Schema.Types.ObjectId,
       required: false,
-      ref: "Location",
+      ref: "User",
     },
   ],
 });
